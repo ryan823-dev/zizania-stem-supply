@@ -1,5 +1,6 @@
 import { Layout } from "@/components/layout/Layout";
 import { Hero } from "@/components/sections/Hero";
+import { ProductionSection } from "@/components/sections/ProductionSection";
 import { SupplyPreview } from "@/components/sections/SupplyPreview";
 import { CultivationPreview } from "@/components/sections/CultivationPreview";
 import { InnovationPreview } from "@/components/sections/InnovationPreview";
@@ -12,6 +13,8 @@ const Index = () => {
   return (
     <Layout>
       <Hero />
+
+      <ProductionSection />
 
       <SystemBand items={["Production", "Handling", "Supply", "Distribution"]} />
 
@@ -27,7 +30,7 @@ const Index = () => {
 
       <CultivationPreview />
 
-      <SystemBand items={["Cultivation", "Processing", "Innovation"]} />
+      <SystemBand items={["Cultivation", "Processing", "Coordination"]} />
 
       <InnovationPreview />
 

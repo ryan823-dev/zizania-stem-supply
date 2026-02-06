@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 
 const directions = [
   {
@@ -27,19 +25,16 @@ const pipeline = [
 
 export function InnovationPreview() {
   return (
-    <section className="section-industrial bg-background">
+    <section className="section-compact bg-background">
       <div className="container">
         {/* Header */}
-        <div className="mb-10">
+        <div className="mb-8">
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
             Innovation
           </p>
           <h2 className="text-foreground leading-tight">
             Applications beyond fresh produce
           </h2>
-          <p className="mt-3 text-sm text-muted-foreground max-w-xl">
-            Value-chain exploration across biomass, feed, and functional material directions.
-          </p>
         </div>
 
         {/* Pipeline Strip */}
@@ -61,23 +56,17 @@ export function InnovationPreview() {
         <div className="grid md:grid-cols-3 gap-4">
           {directions.map((item) => (
             <div key={item.title} className="card-evidence">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-2">
                 <h3 className="text-sm font-semibold text-foreground">{item.title}</h3>
                 <span className="text-[10px] uppercase tracking-widest text-accent font-medium border border-accent/30 px-2 py-0.5">
                   {item.status}
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
                 {item.detail}
               </p>
             </div>
           ))}
-        </div>
-
-        <div className="mt-8">
-          <Button variant="industrial" asChild>
-            <Link to="/contact?type=innovation">Innovation Partnership</Link>
-          </Button>
         </div>
       </div>
     </section>

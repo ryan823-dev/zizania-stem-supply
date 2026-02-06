@@ -37,9 +37,6 @@ export function Hero() {
               <Link to="/supply#specs">Request Specs</Link>
             </Button>
             <Button variant="hero-outline" size="lg" asChild>
-              <Link to="/contact?type=samples">Request Samples</Link>
-            </Button>
-            <Button variant="hero-outline" size="lg" asChild>
               <Link to="/contact">Contact</Link>
             </Button>
           </div>
