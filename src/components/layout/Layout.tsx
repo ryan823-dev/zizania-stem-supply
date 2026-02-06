@@ -20,10 +20,10 @@ export function Layout({ children }: LayoutProps) {
       <Header />
       <div className="pt-16 md:pt-20">
         <IntakeBand onSelectTrack={openTrack} />
+        <main className="flex-1">
+          {children}
+        </main>
       </div>
-      <main className="flex-1">
-        {children}
-      </main>
       <Footer />
       <InquiryChat ref={chatRef} />
     </div>
