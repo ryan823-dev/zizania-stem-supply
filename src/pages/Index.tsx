@@ -1,5 +1,6 @@
 import { Layout } from "@/components/layout/Layout";
 import { Hero } from "@/components/sections/Hero";
+import { IntakeModule } from "@/components/sections/IntakeModule";
 import { ProductionSection } from "@/components/sections/ProductionSection";
 import { SupplyPreview } from "@/components/sections/SupplyPreview";
 import { CultivationPreview } from "@/components/sections/CultivationPreview";
@@ -12,31 +13,37 @@ import { CredibilityStrip } from "@/components/sections/CredibilityStrip";
 const Index = () => {
   return (
     <Layout>
-      <Hero />
+      {(openTrack) => (
+        <>
+          <Hero />
 
-      <ProductionSection />
+          <IntakeModule onSelectTrack={openTrack} />
 
-      <SystemBand items={["Production", "Handling", "Supply", "Distribution"]} />
+          <ProductionSection />
 
-      <SupplyPreview />
+          <SystemBand items={["Production", "Handling", "Supply", "Distribution"]} />
 
-      <CredibilityStrip
-        statements={[
-          "Production structured at origin",
-          "Handling aligned with distribution",
-          "Supply consistency through planning",
-        ]}
-      />
+          <SupplyPreview />
 
-      <CultivationPreview />
+          <CredibilityStrip
+            statements={[
+              "Production structured at origin",
+              "Handling aligned with distribution",
+              "Supply consistency through planning",
+            ]}
+          />
 
-      <SystemBand items={["Cultivation", "Processing", "Coordination"]} />
+          <CultivationPreview />
 
-      <InnovationPreview />
+          <SystemBand items={["Cultivation", "Processing", "Coordination"]} />
 
-      <ExpertiseModule />
+          <InnovationPreview />
 
-      <ContactBlock />
+          <ExpertiseModule />
+
+          <ContactBlock />
+        </>
+      )}
     </Layout>
   );
 };
