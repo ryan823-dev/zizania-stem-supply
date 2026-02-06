@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import type { InquiryTrack } from "@/components/sections/IntakeModule";
 
 export type ChatMessage = {
@@ -7,6 +7,30 @@ export type ChatMessage = {
 };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/inquiry-chat`;
+const SEND_INQUIRY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-inquiry`;
+
+// Detect if an assistant message contains a completed inquiry summary
+const SUMMARY_PATTERN = /inquiry summary[:\s]/i;
+
+async function sendInquiryEmail(summary: string, messages: ChatMessage[]) {
+  try {
+    const resp = await fetch(SEND_INQUIRY_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+      },
+      body: JSON.stringify({ summary, messages }),
+    });
+    if (!resp.ok) {
+      console.error("Failed to send inquiry email:", resp.status);
+    } else {
+      console.log("Inquiry email sent successfully");
+    }
+  } catch (e) {
+    console.error("Error sending inquiry email:", e);
+  }
+}
 
 const TRACK_LABELS: Record<InquiryTrack, string> = {
   supply: "Supply",
@@ -33,6 +57,17 @@ export function useInquiryChat() {
   const [isLoading, setIsLoading] = useState(false);
   const activeTrackRef = useRef<InquiryTrack | undefined>();
   const abortRef = useRef<AbortController | null>(null);
+  const emailSentRef = useRef(false);
+
+  // When streaming finishes and last message is an assistant summary, send email
+  useEffect(() => {
+    if (isLoading || emailSentRef.current) return;
+    const lastMsg = messages[messages.length - 1];
+    if (lastMsg?.role === "assistant" && SUMMARY_PATTERN.test(lastMsg.content)) {
+      emailSentRef.current = true;
+      sendInquiryEmail(lastMsg.content, messages);
+    }
+  }, [messages, isLoading]);
 
   const startWithTrack = useCallback(async (track: InquiryTrack) => {
     activeTrackRef.current = track;
@@ -161,6 +196,7 @@ export function useInquiryChat() {
   const reset = useCallback(() => {
     abortRef.current?.abort();
     activeTrackRef.current = undefined;
+    emailSentRef.current = false;
     setMessages([buildOpeningMessage()]);
     setIsLoading(false);
   }, []);
