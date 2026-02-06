@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import harvestImage from "@/assets/harvest-stems.jpg";
 
-const specItems = [
+const specRows = [
   { label: "Forms", value: "Fresh / Frozen / Processed" },
   { label: "Options", value: "Whole / Peeled / Cut" },
   { label: "Packing", value: "Export cartons" },
@@ -16,12 +16,23 @@ const handlingSteps = [
   { step: "04", label: "Cold Chain", detail: "Temperature-controlled" },
 ];
 
+const planningItems = [
+  { label: "Peak Season", value: "Sep – Nov" },
+  { label: "Frozen", value: "Year-round" },
+  { label: "Lead Time", value: "4–6 weeks" },
+];
+
 export function SupplyPreview() {
   return (
     <section className="section-industrial bg-background">
       <div className="container">
+        {/* Anchor line */}
+        <p className="text-sm font-medium text-foreground tracking-wide mb-8 border-l-2 border-accent pl-3">
+          Production structured at origin.
+        </p>
+
         {/* Section header */}
-        <div className="flex items-baseline justify-between mb-10">
+        <div className="flex items-baseline justify-between mb-8">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
               Supply
@@ -35,58 +46,86 @@ export function SupplyPreview() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-          {/* Content */}
-          <div className="space-y-6">
-            {/* Spec Card */}
-            <div className="card-evidence">
-              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-4">
-                Product Specification
-              </p>
-              <dl className="space-y-3">
-                {specItems.map((item) => (
-                  <div key={item.label} className="flex justify-between items-start gap-4 py-1 border-b border-border last:border-b-0">
-                    <dt className="text-xs uppercase tracking-wider text-muted-foreground">{item.label}</dt>
-                    <dd className="text-sm text-foreground text-right font-medium">{item.value}</dd>
-                  </div>
-                ))}
-              </dl>
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 items-start">
+          {/* Left — Supply System Panel */}
+          <div className="border border-border bg-card">
+            {/* Panel header */}
+            <div className="px-5 py-3 border-b border-border bg-muted/40">
+              <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-semibold">
+                Supply System Overview
+              </span>
             </div>
 
-            {/* Handling Steps */}
-            <div className="card-evidence">
-              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-4">
-                Handling Process
+            {/* Product Specification Block */}
+            <div className="px-5 py-4 border-b border-border">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-accent font-semibold mb-3">
+                Product Specification
               </p>
-              <div className="grid grid-cols-2 gap-4">
+              {specRows.map((item, i) => (
+                <div
+                  key={item.label}
+                  className={`flex justify-between items-center py-2 ${
+                    i < specRows.length - 1 ? "border-b border-border/50" : ""
+                  }`}
+                >
+                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                    {item.label}
+                  </span>
+                  <span className="text-sm text-foreground font-medium">{item.value}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Handling Structure Block */}
+            <div className="px-5 py-4 border-b border-border">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-accent font-semibold mb-3">
+                Handling Structure
+              </p>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                 {handlingSteps.map((step) => (
-                  <div key={step.step} className="flex items-start gap-3">
-                    <span className="text-xs font-medium text-accent/60 mt-0.5">{step.step}</span>
-                    <div>
-                      <span className="text-sm font-medium text-foreground block">{step.label}</span>
-                      <span className="text-xs text-muted-foreground">{step.detail}</span>
+                  <div key={step.step} className="flex items-start gap-2.5">
+                    <span className="text-[10px] font-bold text-accent/50 mt-0.5 leading-none">
+                      {step.step}
+                    </span>
+                    <div className="leading-tight">
+                      <span className="text-sm font-semibold text-foreground block">
+                        {step.label}
+                      </span>
+                      <span className="text-[11px] text-muted-foreground leading-none">
+                        {step.detail}
+                      </span>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Seasonal Note */}
-            <div className="border-l-2 border-accent pl-4 py-1">
-              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-1">
-                Seasonal Note
+            {/* Supply Planning Strip */}
+            <div className="px-5 py-4">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-accent font-semibold mb-3">
+                Supply Planning
               </p>
-              <p className="text-sm text-foreground">
-                Fresh supply: Sep–Nov peak season. Frozen available year-round.
-              </p>
+              <div className="flex items-center divide-x divide-border">
+                {planningItems.map((item) => (
+                  <div key={item.label} className="flex-1 text-center px-2 first:pl-0 first:text-left last:pr-0 last:text-right">
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground block mb-0.5">
+                      {item.label}
+                    </span>
+                    <span className="text-sm font-semibold text-foreground">{item.value}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <Button variant="industrial" asChild>
-              <Link to="/supply#specs">Request Full Spec Sheet</Link>
-            </Button>
+            {/* Panel CTA */}
+            <div className="px-5 py-4 border-t border-border bg-muted/30">
+              <Button variant="industrial" size="sm" asChild>
+                <Link to="/supply#specs">Request Full Spec Sheet</Link>
+              </Button>
+            </div>
           </div>
 
-          {/* Image */}
+          {/* Right — Image */}
           <div>
             <img
               src={harvestImage}
