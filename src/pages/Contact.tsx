@@ -38,10 +38,10 @@ export default function ContactPage() {
                   <div>
                     <p className="text-sm text-muted-foreground">Email</p>
                     <a
-                      href="mailto:inquiry@zizaniastem.com"
+                      href="mailto:support@zizaniastem.com"
                       className="text-foreground hover:text-accent transition-colors"
                     >
-                      inquiry@zizaniastem.com
+                      support@zizaniastem.com
                     </a>
                   </div>
                 </div>
@@ -50,12 +50,12 @@ export default function ContactPage() {
                   <div>
                     <p className="text-sm text-muted-foreground">WhatsApp</p>
                     <a
-                      href="https://wa.me/1234567890"
+                      href="https://wa.me/8618964098013"
                       className="text-foreground hover:text-accent transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      +1 234 567 890
+                      +86 189 6409 8013
                     </a>
                   </div>
                 </div>
