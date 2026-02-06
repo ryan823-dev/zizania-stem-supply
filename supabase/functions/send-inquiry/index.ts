@@ -5,6 +5,7 @@ const ALLOWED_ORIGIN_PATTERNS = [
   /^https:\/\/.*\.lovable\.app$/,
   /^https:\/\/.*\.lovable\.dev$/,
   /^http:\/\/localhost(:\d+)?$/,
+  /^https:\/\/(www\.)?zizaniastem\.com$/,
 ];
 
 function isOriginAllowed(origin: string | null): boolean {
