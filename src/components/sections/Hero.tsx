@@ -4,7 +4,7 @@ import heroImage from "@/assets/hero-field.jpg";
 
 export function Hero() {
   return (
-    <section className="relative min-h-[85vh] flex items-center">
+    <section className="relative min-h-[75vh] flex items-center">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
@@ -18,13 +18,16 @@ export function Hero() {
       {/* Content */}
       <div className="container relative z-10">
         <div className="max-w-3xl">
+          <p className="text-xs uppercase tracking-[0.3em] text-primary-foreground/50 mb-4">
+            Production & Supply System
+          </p>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-primary-foreground leading-tight tracking-tight">
             ZizaniaStem
           </h1>
-          <p className="mt-6 text-xl md:text-2xl text-primary-foreground/90 leading-relaxed">
+          <p className="mt-4 text-xl md:text-2xl text-primary-foreground/90 leading-relaxed">
             Origin-based production and supply of edible Zizania latifolia stem.
           </p>
-          <p className="mt-4 text-lg text-primary-foreground/70 font-light tracking-wide">
+          <p className="mt-3 text-sm text-primary-foreground/60 font-medium tracking-[0.15em] uppercase">
             Cultivation · Supply · Processing
           </p>
 

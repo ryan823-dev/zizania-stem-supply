@@ -9,49 +9,93 @@ const specItems = [
   { label: "Markets", value: "North America / Australia" },
 ];
 
+const handlingSteps = [
+  { step: "01", label: "Grading", detail: "Size & quality classification" },
+  { step: "02", label: "Trimming", detail: "Precision preparation" },
+  { step: "03", label: "Packing", detail: "Export-standard cartons" },
+  { step: "04", label: "Cold Chain", detail: "Temperature-controlled" },
+];
+
 export function SupplyPreview() {
   return (
     <section className="section-industrial bg-background">
       <div className="container">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Content */}
+        {/* Section header */}
+        <div className="flex items-baseline justify-between mb-10">
           <div>
-            <p className="text-sm uppercase tracking-wider text-muted-foreground mb-4">
+            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
               Supply
             </p>
-            <h2 className="text-3xl md:text-4xl font-semibold text-foreground leading-tight">
+            <h2 className="text-foreground leading-tight">
               Global supply structured at origin
             </h2>
-            <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
-              Consistency. Handling. Planning.
-            </p>
+          </div>
+          <p className="hidden md:block text-sm text-muted-foreground max-w-xs text-right">
+            Consistency · Handling · Planning
+          </p>
+        </div>
 
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+          {/* Content */}
+          <div className="space-y-6">
             {/* Spec Card */}
-            <div className="mt-8 card-industrial">
-              <dl className="space-y-4">
+            <div className="card-evidence">
+              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-4">
+                Product Specification
+              </p>
+              <dl className="space-y-3">
                 {specItems.map((item) => (
-                  <div key={item.label} className="flex justify-between items-start gap-4">
-                    <dt className="text-sm text-muted-foreground">{item.label}</dt>
-                    <dd className="text-sm text-foreground text-right">{item.value}</dd>
+                  <div key={item.label} className="flex justify-between items-start gap-4 py-1 border-b border-border last:border-b-0">
+                    <dt className="text-xs uppercase tracking-wider text-muted-foreground">{item.label}</dt>
+                    <dd className="text-sm text-foreground text-right font-medium">{item.value}</dd>
                   </div>
                 ))}
               </dl>
             </div>
 
-            <div className="mt-8">
-              <Button variant="industrial" asChild>
-                <Link to="/supply#specs">Request Full Spec Sheet</Link>
-              </Button>
+            {/* Handling Steps */}
+            <div className="card-evidence">
+              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-4">
+                Handling Process
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                {handlingSteps.map((step) => (
+                  <div key={step.step} className="flex items-start gap-3">
+                    <span className="text-xs font-medium text-accent/60 mt-0.5">{step.step}</span>
+                    <div>
+                      <span className="text-sm font-medium text-foreground block">{step.label}</span>
+                      <span className="text-xs text-muted-foreground">{step.detail}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
+
+            {/* Seasonal Note */}
+            <div className="border-l-2 border-accent pl-4 py-1">
+              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-1">
+                Seasonal Note
+              </p>
+              <p className="text-sm text-foreground">
+                Fresh supply: Sep–Nov peak season. Frozen available year-round.
+              </p>
+            </div>
+
+            <Button variant="industrial" asChild>
+              <Link to="/supply#specs">Request Full Spec Sheet</Link>
+            </Button>
           </div>
 
           {/* Image */}
-          <div className="relative">
+          <div>
             <img
               src={harvestImage}
               alt="Harvested water bamboo stems"
-              className="w-full aspect-square object-cover"
+              className="w-full aspect-[4/3] object-cover"
             />
+            <p className="text-xs text-muted-foreground mt-2 tracking-wide">
+              Graded stems prepared for distribution
+            </p>
           </div>
         </div>
       </div>

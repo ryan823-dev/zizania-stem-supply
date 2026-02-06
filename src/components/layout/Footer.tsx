@@ -13,9 +13,9 @@ const footerLinks = {
     { label: "Planting Materials", href: "/cultivation#materials" },
   ],
   resources: [
-    { label: "Product Knowledge", href: "/resources" },
-    { label: "Market Applications", href: "/resources" },
-    { label: "Cultivation Insights", href: "/resources" },
+    { label: "Product Knowledge", href: "/resources#knowledge" },
+    { label: "Market Applications", href: "/resources#applications" },
+    { label: "Cultivation Insights", href: "/resources#insights" },
   ],
 };
 
