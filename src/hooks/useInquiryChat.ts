@@ -48,7 +48,7 @@ function buildOpeningMessage(track?: InquiryTrack): ChatMessage {
   }
   return {
     role: "assistant",
-    content: "Welcome. Start with your use case — supply, cultivation, processing, or innovation.",
+    content: "Welcome. What are you looking to do — source product, grow it, process it, or explore something new?",
   };
 }
 
