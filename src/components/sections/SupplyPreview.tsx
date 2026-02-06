@@ -46,9 +46,9 @@ export function SupplyPreview() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 items-start">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 items-stretch">
           {/* Left — Supply System Panel */}
-          <div className="border border-border bg-card">
+          <div className="border border-border bg-card flex flex-col">
             {/* Panel header */}
             <div className="px-5 py-3 border-b border-border bg-muted/40">
               <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-semibold">
@@ -117,20 +117,22 @@ export function SupplyPreview() {
             </div>
 
             {/* Panel CTA */}
-            <div className="px-5 py-4 border-t border-border bg-muted/30">
+            <div className="px-5 py-4 border-t border-border bg-muted/30 mt-auto">
               <Button variant="industrial" size="sm" asChild>
                 <Link to="/supply#specs">Request Full Spec Sheet</Link>
               </Button>
             </div>
           </div>
 
-          {/* Right — Image */}
-          <div>
-            <img
-              src={harvestImage}
-              alt="Harvested water bamboo stems"
-              className="w-full aspect-[4/3] object-cover"
-            />
+          {/* Right — Image fills panel height */}
+          <div className="flex flex-col">
+            <div className="flex-1 min-h-0">
+              <img
+                src={harvestImage}
+                alt="Harvested water bamboo stems"
+                className="w-full h-full object-cover"
+              />
+            </div>
             <p className="text-xs text-muted-foreground mt-2 tracking-wide">
               Graded stems prepared for distribution
             </p>
