@@ -1,77 +1,51 @@
-import { Package, Sprout, Factory, Lightbulb } from "lucide-react";
+import { Package, Sprout, Factory, Lightbulb, ChevronRight } from "lucide-react";
 
 export type InquiryTrack = "supply" | "cultivation" | "processing" | "innovation";
 
-interface TrackCard {
+interface TrackItem {
   id: InquiryTrack;
   label: string;
-  description: string;
   icon: React.ComponentType<{ className?: string }>;
 }
 
-const tracks: TrackCard[] = [
-  {
-    id: "supply",
-    label: "Supply",
-    description: "Fresh, frozen, or processed stem sourcing",
-    icon: Package,
-  },
-  {
-    id: "cultivation",
-    label: "Cultivation",
-    description: "Regional planting and production coordination",
-    icon: Sprout,
-  },
-  {
-    id: "processing",
-    label: "Processing",
-    description: "Product form, texture, and compliance",
-    icon: Factory,
-  },
-  {
-    id: "innovation",
-    label: "Innovation",
-    description: "Biomass, feed, aroma, and new applications",
-    icon: Lightbulb,
-  },
+const tracks: TrackItem[] = [
+  { id: "supply", label: "Supply", icon: Package },
+  { id: "cultivation", label: "Cultivation", icon: Sprout },
+  { id: "processing", label: "Processing", icon: Factory },
+  { id: "innovation", label: "Innovation", icon: Lightbulb },
 ];
 
-interface IntakeModuleProps {
+interface IntakeBandProps {
   onSelectTrack: (track: InquiryTrack) => void;
 }
 
-export function IntakeModule({ onSelectTrack }: IntakeModuleProps) {
+export function IntakeBand({ onSelectTrack }: IntakeBandProps) {
   return (
-    <section className="bg-card border-y border-border">
-      <div className="container section-compact">
-        <div className="max-w-3xl">
-          <h2 className="text-xl md:text-2xl font-semibold text-foreground tracking-tight">
-            Tell us your need
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px mt-8 bg-border border border-border">
-          {tracks.map((track) => (
+    <div className="w-full bg-primary border-b border-border">
+      <div className="container flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 py-3">
+        <span className="text-xs font-medium text-primary-foreground/60 tracking-wide uppercase shrink-0 mr-6">
+          Tell us your need
+        </span>
+        <div className="flex flex-wrap items-center gap-px flex-1">
+          {tracks.map((track, i) => (
             <button
               key={track.id}
               onClick={() => onSelectTrack(track.id)}
-              className="group bg-background p-6 md:p-7 text-left transition-colors hover:bg-secondary focus:outline-none focus:bg-secondary"
+              className="group flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
             >
-              <track.icon className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors mb-4" />
-              <p className="text-sm font-semibold text-foreground tracking-tight">
-                {track.label}
-              </p>
-              <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-                {track.description}
-              </p>
+              <track.icon className="w-3.5 h-3.5" />
+              <span>{track.label}</span>
+              <ChevronRight className="w-3 h-3 opacity-0 -ml-1 group-hover:opacity-60 group-hover:ml-0 transition-all" />
+              {i < tracks.length - 1 && (
+                <span className="hidden sm:inline text-primary-foreground/20 ml-2">|</span>
+              )}
             </button>
           ))}
         </div>
-
-        <p className="text-xs text-muted-foreground mt-5 tracking-wide">
-          AI-assisted intake. A responsible team member will follow up within 1–2 business days.
-        </p>
+        <span className="text-[10px] text-primary-foreground/40 tracking-wide hidden lg:block shrink-0">
+          AI-assisted intake · Follow-up within 1–2 business days
+        </span>
       </div>
-    </section>
+    </div>
   );
 }
