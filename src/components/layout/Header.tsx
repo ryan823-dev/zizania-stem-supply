@@ -52,7 +52,7 @@ export function Header() {
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
             <Button variant="industrial" size="sm" asChild>
-              <Link to="/contact">Inquiry</Link>
+              <Link to="/contact">Contact</Link>
             </Button>
           </div>
 
@@ -88,7 +88,7 @@ export function Header() {
               <div className="px-4 pt-4 mt-2 border-t border-border">
                 <Button variant="industrial" className="w-full" asChild>
                   <Link to="/contact" onClick={() => setIsOpen(false)}>
-                    Inquiry
+                    Contact
                   </Link>
                 </Button>
               </div>
