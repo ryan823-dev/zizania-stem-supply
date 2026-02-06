@@ -32,21 +32,23 @@ export function CultivationPreview() {
           </h2>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+        <div className="grid lg:grid-cols-[1fr_1fr] gap-0 items-stretch">
           {/* Image + caption */}
-          <div className="order-2 lg:order-1">
-            <img
-              src={cultivationImage}
-              alt="Water bamboo cultivation field"
-              className="w-full aspect-[4/3] object-cover"
-            />
-            <p className="text-xs text-muted-foreground mt-2 tracking-wide">
+          <div className="order-2 lg:order-1 flex flex-col">
+            <div className="relative flex-1 min-h-[320px] lg:min-h-0">
+              <img
+                src={cultivationImage}
+                alt="Water bamboo cultivation field"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground py-2 tracking-wide">
               Cooperative farming network — field-level coordination
             </p>
           </div>
 
           {/* Content */}
-          <div className="order-1 lg:order-2 space-y-6">
+          <div className="order-1 lg:order-2 flex flex-col gap-5 lg:pl-10">
             {/* Network Card */}
             <div className="card-evidence">
               <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-4">
