@@ -23,7 +23,9 @@ export function Header() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5">
-            <img src={logoIcon} alt="ZizaniaStem" className="h-8 md:h-9 w-auto" />
+            <div className="h-8 md:h-9 w-8 md:w-9 rounded-lg overflow-hidden flex-shrink-0">
+              <img src={logoIcon} alt="ZizaniaStem" className="h-full w-full object-cover scale-110" />
+            </div>
             <span className="text-xl md:text-2xl font-semibold tracking-tight text-foreground">
               ZizaniaStem
             </span>
