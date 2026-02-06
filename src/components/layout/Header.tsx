@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import logoIcon from "@/assets/logo-icon.png";
 
 const navItems = [
   { label: "Supply", href: "/supply" },
@@ -21,7 +22,8 @@ export function Header() {
       <div className="container">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2.5">
+            <img src={logoIcon} alt="ZizaniaStem" className="h-8 md:h-9 w-auto" />
             <span className="text-xl md:text-2xl font-semibold tracking-tight text-foreground">
               ZizaniaStem
             </span>
