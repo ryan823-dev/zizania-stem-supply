@@ -21,9 +21,9 @@ interface IntakeBandProps {
 
 export function IntakeBand({ onSelectTrack }: IntakeBandProps) {
   return (
-    <div className="w-full bg-primary/95 backdrop-blur-sm border-b border-primary-foreground/10">
+    <div className="sticky top-16 md:top-20 z-40 w-full bg-primary/95 backdrop-blur-sm border-b border-primary-foreground/10">
       <div className="container flex items-center justify-between py-0">
-        <span className="text-[11px] font-semibold text-primary-foreground/50 tracking-[0.2em] uppercase shrink-0 mr-8 hidden md:block">
+        <span className="text-[11px] font-semibold text-primary-foreground/65 tracking-[0.2em] uppercase shrink-0 mr-8 hidden md:block">
           Define your need
         </span>
         <div className="flex items-center flex-1">
@@ -31,9 +31,9 @@ export function IntakeBand({ onSelectTrack }: IntakeBandProps) {
             <button
               key={track.id}
               onClick={() => onSelectTrack(track.id)}
-              className="group relative flex items-center gap-2.5 px-5 lg:px-6 py-3.5 text-sm font-medium text-primary-foreground/70 hover:text-primary-foreground transition-all duration-200 hover:bg-primary-foreground/[0.08] active:bg-primary-foreground/[0.12]"
+              className="group relative flex items-center gap-2.5 px-5 lg:px-6 py-3.5 text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground transition-all duration-200 hover:bg-primary-foreground/[0.08] active:bg-primary-foreground/[0.12]"
             >
-              <track.icon className="w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity" />
+              <track.icon className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
               <span className="tracking-wide">{track.label}</span>
               <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-50 group-hover:translate-x-0 transition-all duration-200" />
               {/* Active indicator on hover */}
@@ -45,7 +45,7 @@ export function IntakeBand({ onSelectTrack }: IntakeBandProps) {
             </button>
           ))}
         </div>
-        <span className="text-[10px] text-primary-foreground/35 tracking-[0.15em] uppercase hidden lg:block shrink-0 ml-8">
+        <span className="text-[10px] text-primary-foreground/45 tracking-[0.15em] uppercase hidden lg:block shrink-0 ml-8">
           AI-assisted intake
         </span>
       </div>
