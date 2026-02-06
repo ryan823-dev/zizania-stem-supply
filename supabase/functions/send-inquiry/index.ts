@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { Resend } from "npm:resend@4.0.0";
 
 // Allowed origins
@@ -23,7 +22,7 @@ function getCorsHeaders(origin: string | null): Record<string, string> {
   };
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
   const corsHeaders = getCorsHeaders(origin);
 
