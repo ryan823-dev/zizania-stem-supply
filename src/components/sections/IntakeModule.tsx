@@ -21,29 +21,32 @@ interface IntakeBandProps {
 
 export function IntakeBand({ onSelectTrack }: IntakeBandProps) {
   return (
-    <div className="w-full bg-primary border-b border-border">
-      <div className="container flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 py-3">
-        <span className="text-xs font-medium text-primary-foreground/60 tracking-wide uppercase shrink-0 mr-6">
-          Tell us your need
+    <div className="w-full bg-primary/95 backdrop-blur-sm border-b border-primary-foreground/10">
+      <div className="container flex items-center justify-between py-0">
+        <span className="text-[11px] font-semibold text-primary-foreground/50 tracking-[0.2em] uppercase shrink-0 mr-8 hidden md:block">
+          Define your need
         </span>
-        <div className="flex flex-wrap items-center gap-px flex-1">
+        <div className="flex items-center flex-1">
           {tracks.map((track, i) => (
             <button
               key={track.id}
               onClick={() => onSelectTrack(track.id)}
-              className="group flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
+              className="group relative flex items-center gap-2.5 px-5 lg:px-6 py-3.5 text-sm font-medium text-primary-foreground/70 hover:text-primary-foreground transition-all duration-200 hover:bg-primary-foreground/[0.08] active:bg-primary-foreground/[0.12]"
             >
-              <track.icon className="w-3.5 h-3.5" />
-              <span>{track.label}</span>
-              <ChevronRight className="w-3 h-3 opacity-0 -ml-1 group-hover:opacity-60 group-hover:ml-0 transition-all" />
+              <track.icon className="w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity" />
+              <span className="tracking-wide">{track.label}</span>
+              <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-50 group-hover:translate-x-0 transition-all duration-200" />
+              {/* Active indicator on hover */}
+              <span className="absolute bottom-0 left-5 right-5 h-[2px] bg-primary-foreground/0 group-hover:bg-primary-foreground/40 transition-colors duration-200" />
+              {/* Separator */}
               {i < tracks.length - 1 && (
-                <span className="hidden sm:inline text-primary-foreground/20 ml-2">|</span>
+                <span className="absolute right-0 top-1/2 -translate-y-1/2 w-px h-4 bg-primary-foreground/15" />
               )}
             </button>
           ))}
         </div>
-        <span className="text-[10px] text-primary-foreground/40 tracking-wide hidden lg:block shrink-0">
-          AI-assisted intake · Follow-up within 1–2 business days
+        <span className="text-[10px] text-primary-foreground/35 tracking-[0.15em] uppercase hidden lg:block shrink-0 ml-8">
+          AI-assisted intake
         </span>
       </div>
     </div>
