@@ -2,3 +2,6 @@ project_id = "rmlwzesdewurdxggpfaf"
 
 [functions.inquiry-chat]
 verify_jwt = false
+
+[functions.send-inquiry]
+verify_jwt = false
