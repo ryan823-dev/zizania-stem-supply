@@ -27,7 +27,9 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link to="/" className="inline-flex items-center gap-2.5">
-              <img src={logoIcon} alt="ZizaniaStem" className="h-9 w-auto rounded" />
+              <div className="h-9 w-9 rounded-lg overflow-hidden flex-shrink-0">
+                <img src={logoIcon} alt="ZizaniaStem" className="h-full w-full object-cover scale-110" />
+              </div>
               <span className="text-2xl font-semibold tracking-tight">
                 ZizaniaStem
               </span>
