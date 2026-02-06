@@ -28,7 +28,7 @@ export function SupplyPreview() {
       <div className="container">
         {/* Anchor line */}
         <p className="text-sm font-medium text-foreground tracking-wide mb-8 border-l-2 border-accent pl-3">
-          Production structured at origin.
+          Production structured for ingredient supply and distribution.
         </p>
 
         {/* Section header */}
@@ -37,8 +37,8 @@ export function SupplyPreview() {
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
               Supply
             </p>
-            <h2 className="text-foreground leading-tight">
-              Global supply structured at origin
+            <h2 className="text-foreground leading-tight font-bold">
+              Supply system structured at origin
             </h2>
           </div>
           <p className="hidden md:block text-sm text-muted-foreground max-w-xs text-right">
@@ -48,7 +48,7 @@ export function SupplyPreview() {
 
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 items-stretch">
           {/* Left — Supply System Panel */}
-          <div className="border border-border bg-card flex flex-col">
+          <div className="border border-border bg-secondary flex flex-col shadow-sm">
             {/* Panel header */}
             <div className="px-5 py-3 border-b border-border bg-muted/40">
               <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-semibold">

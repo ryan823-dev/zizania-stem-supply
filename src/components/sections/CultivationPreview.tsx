@@ -27,8 +27,8 @@ export function CultivationPreview() {
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
             Cultivation
           </p>
-          <h2 className="text-foreground leading-tight">
-            Cultivation through production base and cooperative network
+          <h2 className="text-foreground leading-tight font-bold">
+            Production coordination through base and cooperative network
           </h2>
         </div>
 
@@ -52,6 +52,7 @@ export function CultivationPreview() {
               <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-4">
                 Production Network
               </p>
+
               <dl className="space-y-3">
                 {networkData.map((item) => (
                   <div key={item.label} className="flex justify-between items-start gap-4 py-1 border-b border-border last:border-b-0">
@@ -65,7 +66,7 @@ export function CultivationPreview() {
             {/* Process Steps */}
             <div className="card-evidence">
               <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-4">
-                Cultivation Process
+                Production Coordination
               </p>
               <div className="grid grid-cols-2 gap-x-6 gap-y-2">
                 {processSteps.map((step, i) => (
