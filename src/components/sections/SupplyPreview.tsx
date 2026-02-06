@@ -61,19 +61,18 @@ export function SupplyPreview() {
               <p className="text-[10px] uppercase tracking-[0.2em] text-accent font-semibold mb-3">
                 Product Specification
               </p>
-              {specRows.map((item, i) => (
-                <div
-                  key={item.label}
-                  className={`flex justify-between items-center py-2 ${
-                    i < specRows.length - 1 ? "border-b border-border/50" : ""
-                  }`}
-                >
-                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
-                    {item.label}
-                  </span>
-                  <span className="text-sm text-foreground font-medium">{item.value}</span>
-                </div>
-              ))}
+              <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-0">
+                {specRows.map((item, i) => (
+                  <div key={item.label} className={`col-span-2 grid grid-cols-subgrid py-2 ${i < specRows.length - 1 ? "border-b border-border/50" : ""}`}>
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                      {item.label}
+                    </span>
+                    <span className="text-sm text-foreground font-medium">
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Handling Structure Block */}
