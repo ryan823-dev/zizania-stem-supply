@@ -51,6 +51,27 @@ const specifications = [
   { attribute: "Packing", values: "5kg / 10kg export cartons, bulk options available" },
   { attribute: "Storage", values: "Fresh: 0–4°C / Frozen: -18°C" },
   { attribute: "Shelf Life", values: "Fresh: 7–14 days / Frozen: 18 months" },
+  { attribute: "Minimum Order", values: "Fresh: 500kg / Frozen: 1 ton" },
+  { attribute: "Lead Time", values: "Fresh: 7-10 days / Frozen: 3-5 days" },
+];
+
+const pricingRanges = [
+  { form: "Fresh", grade: "Premium", minPrice: "$3.50", maxPrice: "$5.00", unit: "per kg" },
+  { form: "Fresh", grade: "Standard", minPrice: "$2.50", maxPrice: "$3.50", unit: "per kg" },
+  { form: "Frozen", grade: "Premium", minPrice: "$4.00", maxPrice: "$6.00", unit: "per kg" },
+  { form: "Frozen", grade: "Standard", minPrice: "$3.00", maxPrice: "$4.50", unit: "per kg" },
+  { form: "Processed", grade: "Premium", minPrice: "$5.00", maxPrice: "$7.00", unit: "per kg" },
+  { form: "Processed", grade: "Standard", minPrice: "$4.00", maxPrice: "$5.50", unit: "per kg" },
+];
+
+const orderingProcess = [
+  { step: 1, title: "Initial Inquiry", description: "Contact us with your specific requirements" },
+  { step: 2, title: "Quote & Samples", description: "We provide pricing and product samples" },
+  { step: 3, title: "Order Confirmation", description: "Finalize order details and terms" },
+  { step: 4, title: "Production & Processing", description: "We prepare your order" },
+  { step: 5, title: "Quality Control", description: "Rigorous quality inspection" },
+  { step: 6, title: "Packing & Shipping", description: "Secure packing and cold chain shipping" },
+  { step: 7, title: "Delivery & Follow-up", description: "Track delivery and provide support" },
 ];
 
 const faqs = [
@@ -234,8 +255,56 @@ export default function SupplyPage() {
         </div>
       </section>
 
+      {/* Pricing */}
+      <section id="pricing" className="section-industrial bg-card">
+        <div className="container">
+          <h2 className="text-foreground mb-8">Pricing Range</h2>
+          <div className="overflow-x-auto">
+            <table className="spec-table">
+              <thead>
+                <tr>
+                  <th>Product Form</th>
+                  <th>Grade</th>
+                  <th>Price Range</th>
+                  <th>Unit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pricingRanges.map((price, index) => (
+                  <tr key={index}>
+                    <td className="font-medium">{price.form}</td>
+                    <td>{price.grade}</td>
+                    <td>{price.minPrice} - {price.maxPrice}</td>
+                    <td>{price.unit}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-4 text-sm text-muted-foreground">
+            * Prices are subject to seasonal variations and order volume. Contact us for detailed pricing based on your specific requirements.
+          </p>
+        </div>
+      </section>
+
+      {/* Ordering Process */}
+      <section id="ordering" className="section-industrial bg-background">
+        <div className="container">
+          <h2 className="text-foreground mb-8">Ordering Process</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {orderingProcess.map((step) => (
+              <div key={step.step} className="card-evidence">
+                <div className="text-2xl font-bold text-primary mb-3">{step.step}</div>
+                <h3 className="text-lg font-semibold text-foreground mb-2">{step.title}</h3>
+                <p className="text-sm text-muted-foreground">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* FAQ */}
-      <section className="section-industrial bg-background">
+      <section className="section-industrial bg-card">
         <div className="container">
           <div className="max-w-3xl">
             <h2 className="text-foreground mb-8">Frequently Asked</h2>

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LanguageSelector } from "@/components/ui/LanguageSelector";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import logoIcon from "@/assets/logo-icon.png";
 
@@ -10,12 +12,15 @@ const navItems = [
   { label: "Cultivation", href: "/cultivation" },
   { label: "Innovation", href: "/innovation" },
   { label: "Resources", href: "/resources" },
+  { label: "Support", href: "/support" },
+  { label: "Order", href: "/order" },
   { label: "Contact", href: "/contact" },
 ];
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { t } = useTranslation();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
@@ -44,15 +49,16 @@ export function Header() {
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >
-                {item.label}
+                {t(`nav.${item.label.toLowerCase()}`)}
               </Link>
             ))}
           </nav>
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
+            <LanguageSelector />
             <Button variant="industrial" size="sm" asChild>
-              <Link to="/contact">Contact</Link>
+              <Link to="/contact">{t('nav.contact')}</Link>
             </Button>
           </div>
 
@@ -67,34 +73,37 @@ export function Header() {
         </div>
 
         {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="lg:hidden border-t border-border py-4">
-            <nav className="flex flex-col gap-1">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  to={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className={cn(
-                    "px-4 py-3 text-base font-medium transition-colors",
-                    location.pathname === item.href
-                      ? "text-foreground bg-muted"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  )}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <div className="px-4 pt-4 mt-2 border-t border-border">
-                <Button variant="industrial" className="w-full" asChild>
-                  <Link to="/contact" onClick={() => setIsOpen(false)}>
-                    Contact
-                  </Link>
-                </Button>
+          {isOpen && (
+            <div className="lg:hidden border-t border-border py-4">
+              <div className="px-4 mb-4">
+                <LanguageSelector />
               </div>
-            </nav>
-          </div>
-        )}
+              <nav className="flex flex-col gap-1">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={cn(
+                      "px-4 py-3 text-base font-medium transition-colors",
+                      location.pathname === item.href
+                        ? "text-foreground bg-muted"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    )}
+                  >
+                    {t(`nav.${item.label.toLowerCase()}`)}
+                  </Link>
+                ))}
+                <div className="px-4 pt-4 mt-2 border-t border-border">
+                  <Button variant="industrial" className="w-full" asChild>
+                    <Link to="/contact" onClick={() => setIsOpen(false)}>
+                      {t('nav.contact')}
+                    </Link>
+                  </Button>
+                </div>
+              </nav>
+            </div>
+          )}
       </div>
     </header>
   );
