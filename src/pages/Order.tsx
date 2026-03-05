@@ -4,6 +4,10 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { PageTransition } from "@/components/ui/page-transition";
+import { ScrollAnimation } from "@/components/ui/scroll-animation";
+import { Check, AlertCircle, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -51,26 +55,19 @@ const shippingMethods = [
 ];
 
 const orderSchema = z.object({
-  // Customer Information
   name: z.string().trim().min(1, "Name is required").max(100),
   company: z.string().trim().max(100).optional(),
   country: z.string().trim().min(1, "Country is required").max(100),
   email: z.string().trim().email("Invalid email address").max(255),
   phone: z.string().trim().min(1, "Phone is required").max(50),
   address: z.string().trim().min(1, "Address is required").max(500),
-  
-  // Product Details
   productForm: z.string().min(1, "Please select product form"),
   productGrade: z.string().min(1, "Please select product grade"),
   productSize: z.string().min(1, "Please select product size"),
   cutType: z.string().min(1, "Please select cut type"),
   quantity: z.number().min(1, "Quantity must be at least 1"),
-  
-  // Shipping & Payment
   shippingMethod: z.string().min(1, "Please select shipping method"),
   paymentMethod: z.string().min(1, "Please select payment method"),
-  
-  // Additional Information
   specialInstructions: z.string().trim().max(1000).optional(),
 });
 
@@ -95,11 +92,29 @@ export default function OrderPage() {
     specialInstructions: "",
   });
   const [errors, setErrors] = useState<Partial<Record<keyof OrderFormData, string>>>({});
+  const [touched, setTouched] = useState<Partial<Record<keyof OrderFormData, boolean>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (field: keyof OrderFormData, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
+    
+    if (touched[field]) {
+      validateField(field, value);
+    }
+  };
+
+  const handleBlur = (field: keyof OrderFormData) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    validateField(field, formData[field]);
+  };
+
+  const validateField = (field: keyof OrderFormData, value: string | number) => {
+    const fieldSchema = orderSchema.shape[field as keyof typeof orderSchema.shape];
+    const result = fieldSchema.safeParse(value);
+    
+    if (!result.success) {
+      setErrors((prev) => ({ ...prev, [field]: result.error.errors[0]?.message }));
+    } else {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
@@ -107,6 +122,7 @@ export default function OrderPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
+    setTouched({});
 
     const result = orderSchema.safeParse(formData);
     if (!result.success) {
@@ -116,11 +132,11 @@ export default function OrderPage() {
         fieldErrors[field] = err.message;
       });
       setErrors(fieldErrors);
+      toast.error("Please fix errors in form");
       return;
     }
 
     setIsSubmitting(true);
-    // Simulate order submission
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setIsSubmitting(false);
     
@@ -128,327 +144,425 @@ export default function OrderPage() {
     navigate("/thank-you");
   };
 
+  const getFieldStatus = (field: keyof OrderFormData) => {
+    if (!touched[field]) return "default";
+    if (errors[field]) return "error";
+    return "success";
+  };
+
   return (
     <Layout>
-      {/* Hero */}
-      <section className="section-industrial bg-background">
-        <div className="container">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-semibold text-foreground leading-tight">
-              Order Now
-            </h1>
-            <p className="mt-6 text-xl text-muted-foreground leading-relaxed">
-              Place your international order for premium water bamboo products
-            </p>
+      <PageTransition>
+        <section className="section-industrial bg-background">
+          <div className="container">
+            <ScrollAnimation direction="up">
+              <div className="max-w-3xl">
+                <h1 className="text-4xl md:text-5xl font-semibold text-foreground leading-tight">
+                  Order Now
+                </h1>
+                <p className="mt-6 text-xl text-muted-foreground leading-relaxed">
+                  Place your international order for premium water bamboo products
+                </p>
+              </div>
+            </ScrollAnimation>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Order Form */}
-      <section className="section-industrial bg-card">
-        <div className="container">
-          <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-8">
-            {/* Customer Information */}
-            <div>
-              <h2 className="text-2xl font-semibold text-foreground mb-6">Customer Information</h2>
-              <div className="grid md:grid-cols-2 gap-6">
+        <section className="section-industrial bg-card">
+          <div className="container">
+            <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-8">
+              <ScrollAnimation direction="up" delay={100}>
                 <div>
+                  <h2 className="text-2xl font-semibold text-foreground mb-6">Customer Information</h2>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-foreground mb-2">
+                        Name *
+                      </label>
+                      <div className="relative">
+                        <Input
+                          value={formData.name}
+                          onChange={(e) => handleChange("name", e.target.value)}
+                          onBlur={() => handleBlur("name")}
+                          placeholder="Your name"
+                          className={cn(
+                            "pr-10",
+                            errors.name && "border-destructive",
+                            touched.name && !errors.name && "border-success"
+                          )}
+                        />
+                        {getFieldStatus("name") === "success" && (
+                          <Check className="absolute right-3 top-1/2 -translate-y-1/2 text-success h-4 w-4" />
+                        )}
+                        {getFieldStatus("name") === "error" && (
+                          <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 text-destructive h-4 w-4" />
+                        )}
+                      </div>
+                      {errors.name && (
+                        <p className="mt-1 text-sm text-destructive flex items-center gap-1">
+                          <AlertCircle size={14} />
+                          {errors.name}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-foreground mb-2">
+                        Company
+                      </label>
+                      <Input
+                        value={formData.company}
+                        onChange={(e) => handleChange("company", e.target.value)}
+                        onBlur={() => handleBlur("company")}
+                        placeholder="Company name"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 gap-6 mt-6">
+                    <div>
+                      <label className="block text-sm font-medium text-foreground mb-2">
+                        Country *
+                      </label>
+                      <div className="relative">
+                        <Input
+                          value={formData.country}
+                          onChange={(e) => handleChange("country", e.target.value)}
+                          onBlur={() => handleBlur("country")}
+                          placeholder="Your country"
+                          className={cn(
+                            "pr-10",
+                            errors.country && "border-destructive",
+                            touched.country && !errors.country && "border-success"
+                          )}
+                        />
+                        {getFieldStatus("country") === "success" && (
+                          <Check className="absolute right-3 top-1/2 -translate-y-1/2 text-success h-4 w-4" />
+                        )}
+                        {getFieldStatus("country") === "error" && (
+                          <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 text-destructive h-4 w-4" />
+                        )}
+                      </div>
+                      {errors.country && (
+                        <p className="mt-1 text-sm text-destructive flex items-center gap-1">
+                          <AlertCircle size={14} />
+                          {errors.country}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-foreground mb-2">
+                        Email *
+                      </label>
+                      <div className="relative">
+                        <Input
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => handleChange("email", e.target.value)}
+                          onBlur={() => handleBlur("email")}
+                          placeholder="your@email.com"
+                          className={cn(
+                            "pr-10",
+                            errors.email && "border-destructive",
+                            touched.email && !errors.email && "border-success"
+                          )}
+                        />
+                        {getFieldStatus("email") === "success" && (
+                          <Check className="absolute right-3 top-1/2 -translate-y-1/2 text-success h-4 w-4" />
+                        )}
+                        {getFieldStatus("email") === "error" && (
+                          <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 text-destructive h-4 w-4" />
+                        )}
+                      </div>
+                      {errors.email && (
+                        <p className="mt-1 text-sm text-destructive flex items-center gap-1">
+                          <AlertCircle size={14} />
+                          {errors.email}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 gap-6 mt-6">
+                    <div>
+                      <label className="block text-sm font-medium text-foreground mb-2">
+                        Phone *
+                      </label>
+                      <div className="relative">
+                        <Input
+                          value={formData.phone}
+                          onChange={(e) => handleChange("phone", e.target.value)}
+                          onBlur={() => handleBlur("phone")}
+                          placeholder="+1 234 567 8900"
+                          className={cn(
+                            "pr-10",
+                            errors.phone && "border-destructive",
+                            touched.phone && !errors.phone && "border-success"
+                          )}
+                        />
+                        {getFieldStatus("phone") === "success" && (
+                          <Check className="absolute right-3 top-1/2 -translate-y-1/2 text-success h-4 w-4" />
+                        )}
+                        {getFieldStatus("phone") === "error" && (
+                          <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 text-destructive h-4 w-4" />
+                        )}
+                      </div>
+                      {errors.phone && (
+                        <p className="mt-1 text-sm text-destructive flex items-center gap-1">
+                          <AlertCircle size={14} />
+                          {errors.phone}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6">
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Address *
+                    </label>
+                    <div className="relative">
+                      <Textarea
+                        value={formData.address}
+                        onChange={(e) => handleChange("address", e.target.value)}
+                        onBlur={() => handleBlur("address")}
+                        placeholder="Full address including city, state, and postal code"
+                        rows={3}
+                        className={cn(
+                          "pr-10",
+                          errors.address && "border-destructive",
+                          touched.address && !errors.address && "border-success"
+                        )}
+                      />
+                      {getFieldStatus("address") === "success" && (
+                        <Check className="absolute right-3 top-3 text-success h-4 w-4" />
+                      )}
+                      {getFieldStatus("address") === "error" && (
+                        <AlertCircle className="absolute right-3 top-3 text-destructive h-4 w-4" />
+                      )}
+                    </div>
+                    {errors.address && (
+                      <p className="mt-1 text-sm text-destructive flex items-center gap-1">
+                        <AlertCircle size={14} />
+                        {errors.address}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </ScrollAnimation>
+
+              <div className="pt-8 border-t border-border">
+                <h2 className="text-2xl font-semibold text-foreground mb-6">Product Details</h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Product Form *
+                    </label>
+                    <Select
+                      value={formData.productForm}
+                      onValueChange={(value) => handleChange("productForm", value)}
+                    >
+                      <SelectTrigger className={errors.productForm ? "border-destructive" : ""}>
+                        <SelectValue placeholder="Select form" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {productForms.map((form) => (
+                          <SelectItem key={form.value} value={form.value}>
+                            {form.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.productForm && (
+                      <p className="mt-1 text-sm text-destructive">{errors.productForm}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Product Grade *
+                    </label>
+                    <Select
+                      value={formData.productGrade}
+                      onValueChange={(value) => handleChange("productGrade", value)}
+                    >
+                      <SelectTrigger className={errors.productGrade ? "border-destructive" : ""}>
+                        <SelectValue placeholder="Select grade" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {productGrades.map((grade) => (
+                          <SelectItem key={grade.value} value={grade.value}>
+                            {grade.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.productGrade && (
+                      <p className="mt-1 text-sm text-destructive">{errors.productGrade}</p>
+                    )}
+                  </div>
+                </div>
+              
+                <div className="grid md:grid-cols-2 gap-6 mt-6">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Product Size *
+                    </label>
+                    <Select
+                      value={formData.productSize}
+                      onValueChange={(value) => handleChange("productSize", value)}
+                    >
+                      <SelectTrigger className={errors.productSize ? "border-destructive" : ""}>
+                        <SelectValue placeholder="Select size" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {productSizes.map((size) => (
+                          <SelectItem key={size.value} value={size.value}>
+                            {size.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.productSize && (
+                      <p className="mt-1 text-sm text-destructive">{errors.productSize}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Cut Type *
+                    </label>
+                    <Select
+                      value={formData.cutType}
+                      onValueChange={(value) => handleChange("cutType", value)}
+                    >
+                      <SelectTrigger className={errors.cutType ? "border-destructive" : ""}>
+                        <SelectValue placeholder="Select cut type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {cutTypes.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.cutType && (
+                      <p className="mt-1 text-sm text-destructive">{errors.cutType}</p>
+                    )}
+                  </div>
+                </div>
+              
+                <div className="mt-6">
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Name *
+                    Quantity (kg) *
                   </label>
                   <Input
-                    value={formData.name}
-                    onChange={(e) => handleChange("name", e.target.value)}
-                    placeholder="Your name"
-                    className={errors.name ? "border-destructive" : ""}
+                    type="number"
+                    min="1"
+                    value={formData.quantity}
+                    onChange={(e) => handleChange("quantity", parseInt(e.target.value) || 1)}
+                    className={errors.quantity ? "border-destructive" : ""}
                   />
-                  {errors.name && (
-                    <p className="mt-1 text-sm text-destructive">{errors.name}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Company
-                  </label>
-                  <Input
-                    value={formData.company}
-                    onChange={(e) => handleChange("company", e.target.value)}
-                    placeholder="Company name"
-                  />
-                </div>
-              </div>
-              
-              <div className="grid md:grid-cols-2 gap-6 mt-6">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Country *
-                  </label>
-                  <Input
-                    value={formData.country}
-                    onChange={(e) => handleChange("country", e.target.value)}
-                    placeholder="Your country"
-                    className={errors.country ? "border-destructive" : ""}
-                  />
-                  {errors.country && (
-                    <p className="mt-1 text-sm text-destructive">{errors.country}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Email *
-                  </label>
-                  <Input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleChange("email", e.target.value)}
-                    placeholder="your@email.com"
-                    className={errors.email ? "border-destructive" : ""}
-                  />
-                  {errors.email && (
-                    <p className="mt-1 text-sm text-destructive">{errors.email}</p>
+                  {errors.quantity && (
+                    <p className="mt-1 text-sm text-destructive">{errors.quantity}</p>
                   )}
                 </div>
               </div>
-              
-              <div className="grid md:grid-cols-2 gap-6 mt-6">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Phone *
-                  </label>
-                  <Input
-                    value={formData.phone}
-                    onChange={(e) => handleChange("phone", e.target.value)}
-                    placeholder="+1 234 567 8900"
-                    className={errors.phone ? "border-destructive" : ""}
-                  />
-                  {errors.phone && (
-                    <p className="mt-1 text-sm text-destructive">{errors.phone}</p>
-                  )}
-                </div>
-              </div>
-              
-              <div className="mt-6">
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Address *
-                </label>
-                <Textarea
-                  value={formData.address}
-                  onChange={(e) => handleChange("address", e.target.value)}
-                  placeholder="Full address including city, state, and postal code"
-                  rows={3}
-                  className={errors.address ? "border-destructive" : ""}
-                />
-                {errors.address && (
-                  <p className="mt-1 text-sm text-destructive">{errors.address}</p>
-                )}
-              </div>
-            </div>
 
-            {/* Product Details */}
-            <div className="pt-8 border-t border-border">
-              <h2 className="text-2xl font-semibold text-foreground mb-6">Product Details</h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Product Form *
-                  </label>
-                  <Select
-                    value={formData.productForm}
-                    onValueChange={(value) => handleChange("productForm", value)}
-                  >
-                    <SelectTrigger className={errors.productForm ? "border-destructive" : ""}>
-                      <SelectValue placeholder="Select form" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {productForms.map((form) => (
-                        <SelectItem key={form.value} value={form.value}>
-                          {form.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.productForm && (
-                    <p className="mt-1 text-sm text-destructive">{errors.productForm}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Product Grade *
-                  </label>
-                  <Select
-                    value={formData.productGrade}
-                    onValueChange={(value) => handleChange("productGrade", value)}
-                  >
-                    <SelectTrigger className={errors.productGrade ? "border-destructive" : ""}>
-                      <SelectValue placeholder="Select grade" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {productGrades.map((grade) => (
-                        <SelectItem key={grade.value} value={grade.value}>
-                          {grade.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.productGrade && (
-                    <p className="mt-1 text-sm text-destructive">{errors.productGrade}</p>
-                  )}
-                </div>
-              </div>
-              
-              <div className="grid md:grid-cols-2 gap-6 mt-6">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Product Size *
-                  </label>
-                  <Select
-                    value={formData.productSize}
-                    onValueChange={(value) => handleChange("productSize", value)}
-                  >
-                    <SelectTrigger className={errors.productSize ? "border-destructive" : ""}>
-                      <SelectValue placeholder="Select size" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {productSizes.map((size) => (
-                        <SelectItem key={size.value} value={size.value}>
-                          {size.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.productSize && (
-                    <p className="mt-1 text-sm text-destructive">{errors.productSize}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Cut Type *
-                  </label>
-                  <Select
-                    value={formData.cutType}
-                    onValueChange={(value) => handleChange("cutType", value)}
-                  >
-                    <SelectTrigger className={errors.cutType ? "border-destructive" : ""}>
-                      <SelectValue placeholder="Select cut type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {cutTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.cutType && (
-                    <p className="mt-1 text-sm text-destructive">{errors.cutType}</p>
-                  )}
+              <div className="pt-8 border-t border-border">
+                <h2 className="text-2xl font-semibold text-foreground mb-6">Shipping & Payment</h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Shipping Method *
+                    </label>
+                    <Select
+                      value={formData.shippingMethod}
+                      onValueChange={(value) => handleChange("shippingMethod", value)}
+                    >
+                      <SelectTrigger className={errors.shippingMethod ? "border-destructive" : ""}>
+                        <SelectValue placeholder="Select shipping method" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {shippingMethods.map((method) => (
+                          <SelectItem key={method.value} value={method.value}>
+                            {method.label} ({method.leadTime})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.shippingMethod && (
+                      <p className="mt-1 text-sm text-destructive">{errors.shippingMethod}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Payment Method *
+                    </label>
+                    <Select
+                      value={formData.paymentMethod}
+                      onValueChange={(value) => handleChange("paymentMethod", value)}
+                    >
+                      <SelectTrigger className={errors.paymentMethod ? "border-destructive" : ""}>
+                        <SelectValue placeholder="Select payment method" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {paymentMethods.map((method) => (
+                          <SelectItem key={method.value} value={method.value}>
+                            {method.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.paymentMethod && (
+                      <p className="mt-1 text-sm text-destructive">{errors.paymentMethod}</p>
+                    )}
+                  </div>
                 </div>
               </div>
-              
-              <div className="mt-6">
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Quantity (kg) *
-                </label>
-                <Input
-                  type="number"
-                  min="1"
-                  value={formData.quantity}
-                  onChange={(e) => handleChange("quantity", parseInt(e.target.value) || 1)}
-                  className={errors.quantity ? "border-destructive" : ""}
-                />
-                {errors.quantity && (
-                  <p className="mt-1 text-sm text-destructive">{errors.quantity}</p>
-                )}
-              </div>
-            </div>
 
-            {/* Shipping & Payment */}
-            <div className="pt-8 border-t border-border">
-              <h2 className="text-2xl font-semibold text-foreground mb-6">Shipping & Payment</h2>
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="pt-8 border-t border-border">
+                <h2 className="text-2xl font-semibold text-foreground mb-6">Additional Information</h2>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Shipping Method *
+                    Special Instructions
                   </label>
-                  <Select
-                    value={formData.shippingMethod}
-                    onValueChange={(value) => handleChange("shippingMethod", value)}
-                  >
-                    <SelectTrigger className={errors.shippingMethod ? "border-destructive" : ""}>
-                      <SelectValue placeholder="Select shipping method" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {shippingMethods.map((method) => (
-                        <SelectItem key={method.value} value={method.value}>
-                          {method.label} ({method.leadTime})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.shippingMethod && (
-                    <p className="mt-1 text-sm text-destructive">{errors.shippingMethod}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Payment Method *
-                  </label>
-                  <Select
-                    value={formData.paymentMethod}
-                    onValueChange={(value) => handleChange("paymentMethod", value)}
-                  >
-                    <SelectTrigger className={errors.paymentMethod ? "border-destructive" : ""}>
-                      <SelectValue placeholder="Select payment method" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {paymentMethods.map((method) => (
-                        <SelectItem key={method.value} value={method.value}>
-                          {method.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.paymentMethod && (
-                    <p className="mt-1 text-sm text-destructive">{errors.paymentMethod}</p>
-                  )}
+                  <Textarea
+                    value={formData.specialInstructions}
+                    onChange={(e) => handleChange("specialInstructions", e.target.value)}
+                    placeholder="Any special requirements or instructions..."
+                    rows={4}
+                  />
                 </div>
               </div>
-            </div>
 
-            {/* Additional Information */}
-            <div className="pt-8 border-t border-border">
-              <h2 className="text-2xl font-semibold text-foreground mb-6">Additional Information</h2>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Special Instructions
-                </label>
-                <Textarea
-                  value={formData.specialInstructions}
-                  onChange={(e) => handleChange("specialInstructions", e.target.value)}
-                  placeholder="Any special requirements or instructions..."
-                  rows={4}
-                />
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <div className="pt-8 border-t border-border">
-              <Button
-                type="submit"
-                variant="industrial"
-                size="lg"
-                disabled={isSubmitting}
-                className="w-full md:w-auto"
-              >
-                {isSubmitting ? "Processing Order..." : "Submit Order"}
-              </Button>
-              <p className="mt-4 text-sm text-muted-foreground">
-                By submitting this form, you agree to our terms and conditions. We will contact you within 24 hours to confirm your order details and provide payment instructions.
-              </p>
-            </div>
-          </form>
-        </div>
-      </section>
+              <ScrollAnimation direction="up" delay={200}>
+                <div className="pt-8 border-t border-border">
+                  <Button
+                    type="submit"
+                    variant="industrial"
+                    size="lg"
+                    disabled={isSubmitting}
+                    className="w-full md:w-auto btn-3d group"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing Order...
+                      </>
+                    ) : (
+                      <>
+                        Submit Order
+                        <Check className="ml-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                      </>
+                    )}
+                  </Button>
+                  <p className="mt-4 text-sm text-muted-foreground">
+                    By submitting this form, you agree to our terms and conditions. We will contact you within 24 hours to confirm your order details and provide payment instructions.
+                  </p>
+                </div>
+              </ScrollAnimation>
+            </form>
+          </div>
+        </section>
+      </PageTransition>
     </Layout>
   );
 }

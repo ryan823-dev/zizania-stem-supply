@@ -1,15 +1,31 @@
 const productionPoints = [
-  { label: "Base-led production", detail: "Centralized coordination from production base" },
-  { label: "Cooperative farming support", detail: "Structured network of partner farms" },
-  { label: "Seasonal coordination", detail: "Planting and harvest cycle alignment" },
-  { label: "Output planning", detail: "Volume and distribution scheduling" },
+  { 
+    label: "Base-led production", 
+    detail: "Centralized coordination from production base",
+    icon: "🏭"
+  },
+  { 
+    label: "Cooperative farming support", 
+    detail: "Structured network of partner farms",
+    icon: "🤝"
+  },
+  { 
+    label: "Seasonal coordination", 
+    detail: "Planting and harvest cycle alignment",
+    icon: "📅"
+  },
+  { 
+    label: "Output planning", 
+    detail: "Volume and distribution scheduling",
+    icon: "📊"
+  },
 ];
 
 export function ProductionSection() {
   return (
-    <section className="section-compact bg-card border-y border-border">
+    <section id="production" className="section-industrial bg-card border-y border-border">
       <div className="container">
-        <div className="mb-8">
+        <div className="mb-12 animate-on-scroll">
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
             Production
           </p>
@@ -18,19 +34,25 @@ export function ProductionSection() {
           </h2>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-border">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {productionPoints.map((point, i) => (
             <div
               key={point.label}
-              className={`px-5 py-5 ${i < productionPoints.length - 1 ? "border-b sm:border-b lg:border-b-0 sm:even:border-l lg:border-r lg:last:border-r-0" : "sm:border-l lg:border-l-0"} border-border`}
+              className="card-interactive animate-on-scroll group"
+              style={{ animationDelay: `${i * 0.1}s` }}
             >
-              <span className="text-[10px] font-bold text-accent/50 block mb-1">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <p className="text-sm font-semibold text-foreground leading-snug">
+              <div className="flex items-start justify-between mb-4">
+                <span className="text-3xl mb-2 group-hover:scale-110 transition-transform duration-300">
+                  {point.icon}
+                </span>
+                <span className="text-[10px] font-bold text-accent/50 block">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <h3 className="text-sm font-semibold text-foreground leading-snug mb-2 group-hover:text-primary transition-colors">
                 {point.label}
-              </p>
-              <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 {point.detail}
               </p>
             </div>

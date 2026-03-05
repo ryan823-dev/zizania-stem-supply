@@ -30,14 +30,29 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          react: ["react", "react-dom"],
+          vendor: ["react", "react-dom"],
           router: ["react-router-dom"],
           ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu", "@radix-ui/react-select"],
           i18n: ["react-i18next", "i18next"],
+          utils: ["clsx", "tailwind-merge"],
         },
+        chunkFileNames: "assets/[name]-[hash].js",
+        entryFileNames: "assets/[name]-[hash].js",
+        assetFileNames: "assets/[name]-[hash].[ext]",
       },
     },
     sourcemap: mode === "development",
+    chunkSizeWarningLimit: 1000,
+    reportCompressedSize: true,
+  },
+  optimizeDeps: {
+    include: [
+      "react",
+      "react-dom",
+      "react-router-dom",
+      "react-i18next",
+      "i18next",
+    ],
   },
 }));
 
